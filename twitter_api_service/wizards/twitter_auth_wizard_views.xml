@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Twitter Auth Wizard Form View -->
+        <record id="view_twitter_auth_wizard_form" model="ir.ui.view">
+            <field name="name">twitter.auth.wizard.form</field>
+            <field name="model">twitter.auth.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Twitter Authentication">
+                    <group attrs="{'invisible': [('state', '!=', 'start')]}">
+                        <field name="account_id"/>
+                        <field name="state" invisible="1"/>
+                    </group>
+                    
+                    <group attrs="{'invisible': [('state', '!=', 'waiting')]}">
+                        <field name="auth_url" widget="url" readonly="1"/>
+                        <p class="text-muted">
+                            1. Click the URL above to open Twitter authentication<br/>
+                            2. Complete the authentication process<br/>
+                            3. You will be redirected back automatically
+                        </p>
+                        <field name="auth_code" placeholder="Optional: Paste authorization code here"/>
+                    </group>
+                    
+                    <footer>
+                        <button name="action_start_auth" string="Start Authentication" 
+                                type="object" class="btn-primary"
+                                attrs="{'invisible': [('state', '!=', 'start')]}"/>
+                        <button name="action_complete_auth" string="Complete Authentication" 
+                                type="object" class="btn-primary"
+                                attrs="{'invisible': [('state', '!=', 'waiting')]}"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Twitter Auth Wizard Action -->
+        <record id="action_twitter_auth_wizard" model="ir.actions.act_window">
+            <field name="name">Twitter Authentication</field>
+            <field name="res_model">twitter.auth.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

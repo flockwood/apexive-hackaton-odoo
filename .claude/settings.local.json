@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make:*)",
+      "Bash(docker-compose build:*)",
+      "Bash(sudo docker-compose build:*)",
+      "Bash(docker:*)",
+      "Bash(groups)",
+      "Bash(systemctl status:*)",
+      "Bash(find:*)",
+      "Bash(. venv/bin/activate)",
+      "Bash(python3:*)",
+      "Bash(ls:*)",
+      "Bash(git reset:*)",
+      "Bash(rm:*)",
+      "Bash(git clone:*)",
+      "Bash(pip install:*)",
+      "Bash(sudo apt:*)",
+      "Bash(sudo apt install:*)"
+    ],
+    "deny": []
+  }
+}

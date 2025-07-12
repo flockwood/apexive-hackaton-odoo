@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Twitter Service Form View -->
+        <record id="view_twitter_service_form" model="ir.ui.view">
+            <field name="name">twitter.service.form</field>
+            <field name="model">twitter.service</field>
+            <field name="arch" type="xml">
+                <form string="Twitter Service">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="post_tweet"
+                                    icon="fa-twitter" attrs="{'invisible': [('account_id', '=', False)]}">
+                                <field name="total_tweets_posted" widget="statinfo" string="Tweets Posted"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group name="basic_info">
+                                <field name="name"/>
+                                <field name="account_id" domain="[('active', '=', True)]" 
+                                       options="{'no_create': True, 'no_create_edit': True}"/>
+                                <field name="active"/>
+                            </group>
+                            <group name="status_info">
+                                <field name="last_tweet_time" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Quick Actions">
+                                <group>
+                                    <group name="post_tweet">
+                                        <field name="name" invisible="1"/>
+                                        <label for="tweet_text" string="Tweet Text"/>
+                                        <field name="tweet_text" widget="text" placeholder="What's happening?" 
+                                               attrs="{'required': [('account_id', '!=', False)]}"/>
+                                        <button name="action_post_tweet" string="Post Tweet" type="object"
+                                                class="btn-primary" attrs="{'invisible': [('account_id', '=', False)]}"/>
+                                    </group>
+                                    <group name="timeline">
+                                        <button name="action_get_timeline" string="Get Timeline" type="object"
+                                                class="btn-secondary" attrs="{'invisible': [('account_id', '=', False)]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="API Statistics">
+                                <group>
+                                    <field name="total_tweets_posted" readonly="1"/>
+                                    <field name="last_tweet_time" readonly="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Twitter Service Tree View -->
+        <record id="view_twitter_service_tree" model="ir.ui.view">
+            <field name="name">twitter.service.tree</field>
+            <field name="model">twitter.service</field>
+            <field name="arch" type="xml">
+                <tree string="Twitter Services" decoration-success="active" decoration-muted="not active">
+                    <field name="name"/>
+                    <field name="account_id"/>
+                    <field name="total_tweets_posted"/>
+                    <field name="last_tweet_time"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Twitter Service Search View -->
+        <record id="view_twitter_service_search" model="ir.ui.view">
+            <field name="name">twitter.service.search</field>
+            <field name="model">twitter.service</field>
+            <field name="arch" type="xml">
+                <search string="Twitter Services">
+                    <field name="name"/>
+                    <field name="account_id"/>
+                    <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                    <filter name="inactive" string="Inactive" domain="[('active', '=', False)]"/>
+                    <filter name="with_tweets" string="Has Posted Tweets" domain="[('total_tweets_posted', '>', 0)]"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_account" string="Account" context="{'group_by': 'account_id'}"/>
+                        <filter name="group_by_active" string="Active Status" context="{'group_by': 'active'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Twitter Service Action -->
+        <record id="action_twitter_service" model="ir.actions.act_window">
+            <field name="name">Twitter Services</field>
+            <field name="res_model">twitter.service</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_twitter_service_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first Twitter service
+                </p>
+                <p>
+                    Twitter services allow you to post tweets and retrieve timelines using configured accounts.
+                </p>
+            </field>
+        </record>
+
+        <!-- Twitter API Response Form View -->
+        <record id="view_twitter_api_response_form" model="ir.ui.view">
+            <field name="name">twitter.api.response.form</field>
+            <field name="model">twitter.api.response</field>
+            <field name="arch" type="xml">
+                <form string="Twitter API Response">
+                    <header>
+                        <field name="success" widget="boolean_toggle"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group name="request_info">
+                                <field name="service_id"/>
+                                <field name="account_id"/>
+                                <field name="request_type"/>
+                                <field name="method"/>
+                                <field name="endpoint"/>
+                            </group>
+                            <group name="response_info">
+                                <field name="status_code"/>
+                                <field name="response_time_ms"/>
+                                <field name="error_type" attrs="{'invisible': [('success', '=', True)]}"/>
+                            </group>
+                        </group>
+                        <group name="rate_limit" string="Rate Limiting">
+                            <field name="rate_limit_remaining"/>
+                            <field name="rate_limit_reset"/>
+                        </group>
+                        <group name="metadata" string="Metadata">
+                            <field name="tweet_id" attrs="{'invisible': [('tweet_id', '=', False)]}"/>
+                            <field name="media_id" attrs="{'invisible': [('media_id', '=', False)]}"/>
+                            <field name="timeline_count" attrs="{'invisible': [('timeline_count', '=', 0)]}"/>
+                        </group>
+                        <notebook>
+                            <page string="Request Data" attrs="{'invisible': [('request_data', '=', False)]}">
+                                <field name="request_data" widget="text"/>
+                            </page>
+                            <page string="Response Data" attrs="{'invisible': [('response_data', '=', False)]}">
+                                <field name="response_data" widget="text"/>
+                            </page>
+                            <page string="Error Details" attrs="{'invisible': [('success', '=', True)]}">
+                                <field name="error_message" widget="text"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Twitter API Response Tree View -->
+        <record id="view_twitter_api_response_tree" model="ir.ui.view">
+            <field name="name">twitter.api.response.tree</field>
+            <field name="model">twitter.api.response</field>
+            <field name="arch" type="xml">
+                <tree string="API Responses" decoration-success="success" decoration-danger="not success">
+                    <field name="create_date"/>
+                    <field name="display_name"/>
+                    <field name="service_id"/>
+                    <field name="request_type"/>
+                    <field name="status_code"/>
+                    <field name="success" widget="boolean_toggle"/>
+                    <field name="error_type"/>
+                    <field name="response_time_ms"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Twitter API Response Search View -->
+        <record id="view_twitter_api_response_search" model="ir.ui.view">
+            <field name="name">twitter.api.response.search</field>
+            <field name="model">twitter.api.response</field>
+            <field name="arch" type="xml">
+                <search string="API Responses">
+                    <field name="service_id"/>
+                    <field name="request_type"/>
+                    <field name="error_type"/>
+                    <filter name="success" string="Successful" domain="[('success', '=', True)]"/>
+                    <filter name="failed" string="Failed" domain="[('success', '=', False)]"/>
+                    <filter name="rate_limited" string="Rate Limited" domain="[('error_type', '=', 'rate_limit_error')]"/>
+                    <filter name="today" string="Today" domain="[('create_date', '>=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_service" string="Service" context="{'group_by': 'service_id'}"/>
+                        <filter name="group_by_request_type" string="Request Type" context="{'group_by': 'request_type'}"/>
+                        <filter name="group_by_success" string="Success Status" context="{'group_by': 'success'}"/>
+                        <filter name="group_by_error_type" string="Error Type" context="{'group_by': 'error_type'}"/>
+                        <filter name="group_by_date" string="Date" context="{'group_by': 'create_date:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Twitter API Response Action -->
+        <record id="action_twitter_api_response" model="ir.actions.act_window">
+            <field name="name">API Responses</field>
+            <field name="res_model">twitter.api.response</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_twitter_api_response_search"/>
+            <field name="context">{'search_default_today': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No API responses logged yet
+                </p>
+                <p>
+                    API responses will appear here when you start using Twitter services.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

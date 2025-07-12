@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_twitter_account_user,twitter.account.user,model_twitter_account,group_twitter_user,1,0,0,0
+access_twitter_account_manager,twitter.account.manager,model_twitter_account,group_twitter_manager,1,1,1,1
+access_twitter_service_user,twitter.service.user,model_twitter_service,group_twitter_user,1,0,0,0
+access_twitter_service_manager,twitter.service.manager,model_twitter_service,group_twitter_manager,1,1,1,1
+access_twitter_api_response_user,twitter.api.response.user,model_twitter_api_response,group_twitter_user,1,0,0,0
+access_twitter_api_response_manager,twitter.api.response.manager,model_twitter_api_response,group_twitter_manager,1,1,1,1

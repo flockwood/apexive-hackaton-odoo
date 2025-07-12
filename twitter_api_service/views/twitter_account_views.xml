@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Twitter Account Form View -->
+        <record id="view_twitter_account_form" model="ir.ui.view">
+            <field name="name">twitter.account.form</field>
+            <field name="model">twitter.account</field>
+            <field name="arch" type="xml">
+                <form string="Twitter Account">
+                    <header>
+                        <button name="action_authenticate" 
+                                string="Authenticate" 
+                                type="object"
+                                class="btn-primary"
+                                attrs="{'invisible': [('is_authenticated', '=', True)]}"/>
+                        <button name="test_connection" 
+                                string="Test Connection" 
+                                type="object"
+                                class="btn-secondary"
+                                attrs="{'invisible': [('is_authenticated', '=', False)]}"/>
+                        <button name="refresh_access_token" 
+                                string="Refresh Token" 
+                                type="object"
+                                class="btn-secondary"
+                                groups="base.group_system"
+                                attrs="{'invisible': [('refresh_token', '=', False)]}"/>
+                        <field name="is_authenticated" widget="boolean_toggle"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="test_connection"
+                                    attrs="{'invisible': [('is_authenticated', '=', False)]}">
+                                <field name="rate_limit_remaining" widget="statinfo" string="Rate Limit"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group name="basic_info">
+                                <field name="name" placeholder="e.g., My Twitter Account"/>
+                                <field name="active"/>
+                            </group>
+                            <group name="twitter_info" attrs="{'invisible': [('is_authenticated', '=', False)]}">
+                                <field name="twitter_username" readonly="1"/>
+                                <field name="twitter_display_name" readonly="1"/>
+                                <field name="twitter_user_id" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="API Configuration">
+                                <group>
+                                    <group name="oauth_config">
+                                        <field name="client_id" password="True"/>
+                                        <field name="client_secret" password="True"/>
+                                        <field name="redirect_uri"/>
+                                    </group>
+                                    <group name="auth_status">
+                                        <field name="token_expires_at" readonly="1"/>
+                                        <field name="last_sync" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Rate Limiting">
+                                <group>
+                                    <field name="rate_limit_remaining" readonly="1"/>
+                                    <field name="rate_limit_reset" readonly="1"/>
+                                </group>
+                            </page>
+                            <page string="Advanced" groups="base.group_system">
+                                <group>
+                                    <field name="access_token" readonly="1" password="True"/>
+                                    <field name="refresh_token" readonly="1" password="True"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Twitter Account Tree View -->
+        <record id="view_twitter_account_tree" model="ir.ui.view">
+            <field name="name">twitter.account.tree</field>
+            <field name="model">twitter.account</field>
+            <field name="arch" type="xml">
+                <tree string="Twitter Accounts" decoration-success="is_authenticated" decoration-muted="not active">
+                    <field name="name"/>
+                    <field name="twitter_username"/>
+                    <field name="is_authenticated" widget="boolean_toggle"/>
+                    <field name="rate_limit_remaining"/>
+                    <field name="last_sync"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Twitter Account Search View -->
+        <record id="view_twitter_account_search" model="ir.ui.view">
+            <field name="name">twitter.account.search</field>
+            <field name="model">twitter.account</field>
+            <field name="arch" type="xml">
+                <search string="Twitter Accounts">
+                    <field name="name"/>
+                    <field name="twitter_username"/>
+                    <filter name="authenticated" string="Authenticated" domain="[('is_authenticated', '=', True)]"/>
+                    <filter name="not_authenticated" string="Not Authenticated" domain="[('is_authenticated', '=', False)]"/>
+                    <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                    <filter name="inactive" string="Inactive" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_authenticated" string="Authentication Status" context="{'group_by': 'is_authenticated'}"/>
+                        <filter name="group_by_active" string="Active Status" context="{'group_by': 'active'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Twitter Account Action -->
+        <record id="action_twitter_account" model="ir.actions.act_window">
+            <field name="name">Twitter Accounts</field>
+            <field name="res_model">twitter.account</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_twitter_account_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first Twitter account configuration
+                </p>
+                <p>
+                    Set up Twitter API credentials to start posting tweets and retrieving timelines.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

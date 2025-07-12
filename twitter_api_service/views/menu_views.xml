@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Main Menu -->
+        <menuitem id="menu_twitter_main"
+                  name="Twitter API"
+                  sequence="50"/>
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_twitter_config"
+                  name="Configuration"
+                  parent="menu_twitter_main"
+                  sequence="10"/>
+
+        <menuitem id="menu_twitter_accounts"
+                  name="Twitter Accounts"
+                  parent="menu_twitter_config"
+                  action="action_twitter_account"
+                  sequence="10"/>
+
+        <menuitem id="menu_twitter_services"
+                  name="Twitter Services"
+                  parent="menu_twitter_config"
+                  action="action_twitter_service"
+                  sequence="20"/>
+
+        <!-- Operations Menu -->
+        <menuitem id="menu_twitter_operations"
+                  name="Operations"
+                  parent="menu_twitter_main"
+                  sequence="20"/>
+
+        <!-- Monitoring Menu -->
+        <menuitem id="menu_twitter_monitoring"
+                  name="Monitoring"
+                  parent="menu_twitter_main"
+                  sequence="30"/>
+
+        <menuitem id="menu_twitter_api_responses"
+                  name="API Responses"
+                  parent="menu_twitter_monitoring"
+                  action="action_twitter_api_response"
+                  sequence="10"/>
+    </data>
+</odoo>

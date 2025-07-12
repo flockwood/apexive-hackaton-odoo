@@ -26,8 +26,6 @@ services:
     command: ["--addons-path", "/mnt/extra-addons"]
     build:
       context: docker
-      platforms:
-        - "linux/amd64"
     volumes:
       - ./extra-addons:/mnt/extra-addons
       - ./local-data:/var/lib/odoo
@@ -42,8 +40,7 @@ services:
       - donotstart
     image: ${ODOO_IMAGE}:${ODOO_VERSION}.${ODOO_IMAGE_VERSION}-bundle-${ODOO_BUNDLE_VERSION}
     build:
-      platforms:
-        - "linux/amd64"
+      context: docker
       args:
         FROM_IMAGE: ${ODOO_IMAGE}:${ODOO_VERSION}.${ODOO_IMAGE_VERSION}
 
@@ -58,16 +55,9 @@ services:
       - 6333
       - 6334
       - 6335
-    configs:
-      - source: qdrant_config
-        target: /qdrant/config/production.yaml
     volumes:
+      - ./qdrant_config.yaml:/qdrant/config/production.yaml
       - ./local-data/qdrant:/qdrant/storage
-
-configs:
-  qdrant_config:
-    content: |
-      log_level: INFO
 
 volumes:
   postgresql_data:

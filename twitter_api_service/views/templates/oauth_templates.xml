@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- OAuth Success Template -->
+        <template id="oauth_success" name="Twitter OAuth Success">
+            <t t-call="web.layout">
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header bg-success text-white">
+                                    <h4 class="mb-0">
+                                        <i class="fa fa-check-circle mr-2"/>
+                                        Authentication Successful
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <p class="lead">
+                                        Your Twitter account has been successfully authenticated!
+                                    </p>
+                                    <div class="mb-3">
+                                        <strong>Account:</strong> <t t-esc="account_name"/>
+                                    </div>
+                                    <div class="mb-3" t-if="twitter_username">
+                                        <strong>Twitter Username:</strong> @<t t-esc="twitter_username"/>
+                                    </div>
+                                    <p class="text-muted">
+                                        You can now close this window and return to your application.
+                                    </p>
+                                    <button type="button" class="btn btn-primary" onclick="window.close();">
+                                        Close Window
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- OAuth Error Template -->
+        <template id="oauth_error" name="Twitter OAuth Error">
+            <t t-call="web.layout">
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header bg-danger text-white">
+                                    <h4 class="mb-0">
+                                        <i class="fa fa-exclamation-circle mr-2"/>
+                                        Authentication Failed
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <p class="lead">
+                                        There was an error during the authentication process.
+                                    </p>
+                                    <div class="mb-3">
+                                        <strong>Error:</strong> <t t-esc="error"/>
+                                    </div>
+                                    <div class="mb-3" t-if="error_description">
+                                        <strong>Description:</strong> <t t-esc="error_description"/>
+                                    </div>
+                                    <p class="text-muted">
+                                        Please try again or contact your administrator if the problem persists.
+                                    </p>
+                                    <button type="button" class="btn btn-secondary" onclick="window.close();">
+                                        Close Window
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

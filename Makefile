@@ -43,8 +43,10 @@ modules:
 	$(GIT) submodule foreach --recursive 'git pull'
 
 symlinks:
-	cd $(ADDONS_DIR) && rm -f * ; \
-	ln -sf $$(find .src -type f -name __manifest__.py | sed 's/__manifest__.py//g') .
+	cd $(ADDONS_DIR) && find . -maxdepth 1 -type l -delete ; \
+	for addon in $$(find .src -type f -name __manifest__.py | sed 's/__manifest__.py//g'); do \
+		[ -d "$$addon" ] && ln -sf "$$addon" .; \
+	done
 
 docker/requirements.txt:
 	$(ACTIVATE)	setuptools-odoo-make-default --odoo-version-override="$(ODOO_VERSION)" --addons-dir "$(ADDONS_DIR)" && \
@@ -59,12 +61,12 @@ init: venv
 	$(ACTIVATE) pip install --upgrade pip setuptools-odoo wheel -r src/odoo/requirements.txt -r docker/requirements.txt
 
 venv:
-	python3.10 -m venv venv
+	python3 -m venv venv
 
 init-dev: $(ODOO_SRC) init
 
 $(ODOO_SRC):
-	if [ -d "$(ODOO_SRC)" ]; then cd $(ODOO_SRC) && git pull; else git clone --depth=1 -b $(ODOO_VERSION) git@github.com:/odoo/odoo $(ODOO_SRC); fi
+	if [ -d "$(ODOO_SRC)" ]; then cd $(ODOO_SRC) && git pull; else git clone --depth=1 -b $(ODOO_VERSION) https://github.com/odoo/odoo $(ODOO_SRC); fi
 	perl -p -i -e 's/(greenlet|gevent|psycopg2|requests)[>=<~\\!].*$$/\1/' $(ODOO_SRC)/requirements.txt
 
 
